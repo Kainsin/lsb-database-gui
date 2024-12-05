@@ -1,0 +1,35 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="org.kainsin.lsbdatabasegui">
+        <description>
+            Persistence unit for a LSB FFXI database
+        </description>
+        
+        <class>org.kainsin.lsbdatabasegui.entities.items.ItemEntity</class>
+        <class>org.kainsin.lsbdatabasegui.entities.items.ItemEntityReduced</class>
+        <class>org.kainsin.lsbdatabasegui.entities.items.AuctionHouseCategoryConverter</class>
+        <class>org.kainsin.lsbdatabasegui.entities.items.ItemPropertyConverter</class>
+
+        <properties>
+            <!-- Connection -->
+            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.connection.provider_class" value="com.zaxxer.hikari.hibernate.HikariConnectionProvider"/>
+
+            <!-- Level 2 Cache -->
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class" value="jcache"/>
+            <property name="hibernate.javax.cache.provider" value="org.ehcache.jsr107.EhcacheCachingProvider"/>
+            <property name="hibernate.javax.cache.uri" value="META-INF/ehcache.xml"/>
+
+            <!-- Echo all executed SQL to console -->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.highlight_sql" value="true"/>
+        </properties>
+
+    </persistence-unit>
+
+</persistence>

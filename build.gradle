@@ -1,0 +1,100 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.diffplug.spotless' version '6.25.0'
+    id 'io.freefair.lombok' version '8.10'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+group = 'org.kainsin'
+version = '1.0-SNAPSHOT'
+
+application {
+    mainModule = 'org.kainsin.lsbdatabasegui'
+    mainClass = 'org.kainsin.lsbdatabasegui.DatabaseGuiApplication'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Database - Hibernate ORM
+    implementation platform('org.hibernate.orm:hibernate-platform:6.6.0.Final')
+    implementation 'com.fasterxml:classmate'
+    implementation 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
+    implementation 'jakarta.transaction:jakarta.transaction-api'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+    implementation 'net.bytebuddy:byte-buddy'
+    implementation 'org.hibernate.common:hibernate-commons-annotations'
+    implementation 'org.hibernate.orm:hibernate-core'
+    implementation 'org.jboss.logging:jboss-logging'
+
+    // Database - Driver
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.4.1'
+
+    // Database - Connection pool
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'org.hibernate:hibernate-hikaricp:6.6.0.Final'
+
+    // Database - Level 2 Cache
+    implementation 'org.ehcache:ehcache:3.10.8:jakarta'
+    implementation 'org.hibernate.orm:hibernate-jcache'
+
+    // Logging
+    implementation platform('org.apache.logging.log4j:log4j-bom:2.24.0')
+    implementation 'org.apache.logging.log4j:log4j-api'
+    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+
+    // Utilities
+    implementation 'com.google.guava:guava:33.3.1-jre'
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+
+    // Testing
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+javafx {
+    version = "22.0.1"
+    modules = ['javafx.graphics', 'javafx.controls', 'javafx.fxml']
+}
+
+test {
+    useJUnitPlatform()
+}
+
+spotless {
+    // Limit format enforcement to just the files changed by this feature branch.
+    ratchetFrom 'origin/main'
+
+    format 'misc', {
+        // Define the files to apply `misc` to.
+        target '*.gradle', '.gitattributes', '.gitignore'
+
+        // Define the steps to apply to those files.
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+
+    java {
+        // Allow manual exclusion of formatting.
+        toggleOffOn()
+
+        // Format the files.
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        palantirJavaFormat('2.50.0')
+
+        // Fix formatting of type annotations.
+        formatAnnotations()
+
+        // Make sure every file has the following copyright header.
+        licenseHeader '/* (C)$YEAR */'
+    }
+}
